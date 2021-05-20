@@ -1,0 +1,9 @@
+[submodule "nestHttpApp"]
+	path = nestHttpApp
+	url = https://github.com/leospaula/nest-http-app.git
+[submodule "statesMicroservice"]
+	path = statesMicroservice
+	url = https://github.com/leospaula/nest-state-microservice.git
+[submodule "populationMicroservice"]
+	path = populationMicroservice
+	url = https://github.com/leospaula/nest-population-microservice.git
