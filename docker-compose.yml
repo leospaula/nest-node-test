@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  nest-http-app:
+    container_name: nest-http-app
+    build:
+      context: ./nestHttpApp
+      target: development
+    volumes:
+      - ./nestHttpApp:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      NATS_URL: nats://nats-server:4222
+    command: npm run start:dev
+    networks:
+      - webnet
+    depends_on:
+      - nats-server
+      - nest-state-ms
+      - nest-population-ms
+  nats-server:
+    container_name: nats-server
+    entrypoint: '/nats-server -c nats-server.conf -DV'
+    image: nats
+    ports:
+      - '4222:4222'
+      - '6222:6222'
+      - '8222:8222'
+    networks:
+      - webnet
+  nest-state-ms:
+    container_name: nest-state-ms
+    build:
+      context: ./statesMicroservice
+      target: development
+    volumes:
+      - ./statesMicroservice:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      NATS_URL: nats://nats-server:4222
+    command: npm run start:dev
+    networks:
+      - webnet
+  nest-population-ms:
+    container_name: nest-population-ms
+    build:
+      context: ./populationMicroservice
+      target: development
+    volumes:
+      - ./populationMicroservice:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      NATS_URL: nats://nats-server:4222
+    command: npm run start:dev
+    networks:
+      - webnet
+networks:
+  webnet:
